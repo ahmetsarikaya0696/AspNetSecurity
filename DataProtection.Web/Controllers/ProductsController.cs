@@ -14,20 +14,24 @@ namespace DataProtection.Web.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IDataProtector _dataProtector;
+        private readonly ITimeLimitedDataProtector _timeLimitedDataProtector;
 
         public ProductsController(AppDbContext context, IDataProtectionProvider dataProtectionProvider)
         {
             _context = context;
             _dataProtector = dataProtectionProvider.CreateProtector("productId");
+            _timeLimitedDataProtector = _dataProtector.ToTimeLimitedDataProtector();
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products.ToListAsync();
+
             products.ForEach(p =>
             {
-                p.EncryptedId = _dataProtector.Protect(p.Id.ToString());
+                //p.EncryptedId = _dataProtector.Protect(p.Id.ToString());
+                p.EncryptedId = _timeLimitedDataProtector.Protect(p.Id.ToString(), TimeSpan.FromSeconds(5)); // 5 saniye süre içerisinde çözülebilir.
             });
 
             return View(products);
@@ -41,7 +45,8 @@ namespace DataProtection.Web.Controllers
                 return NotFound();
             }
 
-            int decryptedId = int.Parse(_dataProtector.Unprotect(id));
+            //int decryptedId = int.Parse(_dataProtector.Unprotect(id));
+            int decryptedId = int.Parse(_timeLimitedDataProtector.Unprotect(id));
 
             var product = await _context.Products
                 .FirstOrDefaultAsync(m => m.Id == decryptedId);
