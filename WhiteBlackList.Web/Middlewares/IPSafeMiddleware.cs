@@ -8,10 +8,10 @@ namespace WhiteBlackList.Web.Middlewares
         private readonly RequestDelegate _next;
         private readonly IPList _ipList;
 
-        public IPSafeMiddleware(RequestDelegate next, IOptions<IPList> ipListoptions)
+        public IPSafeMiddleware(RequestDelegate next, IOptions<IPList> ipListOptions)
         {
             _next = next;
-            _ipList = ipListoptions.Value;
+            _ipList = ipListOptions.Value;
         }
 
         public async Task Invoke(HttpContext httpContext)
