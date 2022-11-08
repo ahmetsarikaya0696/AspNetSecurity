@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -10,9 +10,14 @@ builder.Services.AddSwaggerGen();
 // CORS - Cross Origin Resource Sharing
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
+    //options.AddDefaultPolicy(policy =>
+    //{
+    //    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    //});
+    options.AddPolicy("AllowedSites", policy =>
     {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        // https://localhost:7071/ MVC uygulaması
+        policy.WithOrigins("https://localhost:7071/").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -28,7 +33,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // CORS - Cross Origin Resource Sharing
-app.UseCors();
+app.UseCors("AllowedSites");
 
 app.UseAuthorization();
 
