@@ -16,8 +16,13 @@ builder.Services.AddCors(options =>
     //});
     options.AddPolicy("AllowedSites", policy =>
     {
-        // https://localhost:7071/ MVC uygulaması
-        policy.WithOrigins("https://localhost:7071/").AllowAnyHeader().AllowAnyMethod();
+        // https://localhost:7071 MVC uygulaması
+        policy.WithOrigins("https://localhost:7071").AllowAnyHeader().AllowAnyMethod();
+    });
+
+    options.AddPolicy("AllowedSites2", policy =>
+    {
+        policy.WithOrigins("https://localhost:7071").WithMethods("POST","GET").AllowAnyHeader();
     });
 });
 
@@ -33,7 +38,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // CORS - Cross Origin Resource Sharing
-app.UseCors("AllowedSites");
+//app.UseCors("AllowedSites");
+// Uygulama bazında Cors uyguladığımızda string ifade belirtmemize gerek yok
+app.UseCors();
 
 app.UseAuthorization();
 
