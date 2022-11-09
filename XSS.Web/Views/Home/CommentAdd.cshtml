@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -25,8 +24,16 @@
         <h1>Comments</h1>
         <strong>@ViewBag.name</strong>
         <hr />
-        <span>@Html.Raw(ViewBag.comment)</span>
-        <span>Html.Raw(ViewBag.comment) XSS Güvenlik açığına sebep olur</span>
+        @*<span>@Html.Raw(ViewBag.comment)</span>
+        <span>Html.Raw(ViewBag.comment) XSS Güvenlik açığına sebep olur</span>*@
+        @if (ViewBag.comment != null)
+        {
+            foreach (var comment in ViewBag.comment as string[])
+            {
+                <span>@Html.Raw(comment)</span>
+                <hr />
+            }
+        }
     </div>
 </body>
 </html>

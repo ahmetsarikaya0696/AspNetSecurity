@@ -1,0 +1,3 @@
+ - <script>alert('merhaba')</script>
+<b>BOLD</b>
+ - <script>alert(document.cookie)</script>

