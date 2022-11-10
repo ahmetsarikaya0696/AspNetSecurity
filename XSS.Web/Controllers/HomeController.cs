@@ -52,6 +52,23 @@ namespace XSS.Web.Controllers
             return RedirectToAction(nameof(CommentAdd));
         }
 
+        public IActionResult Login(string returnUrl = "https://localhost:7182/")
+        {
+            TempData["returnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login()
+        {
+            string returnUrl = TempData["returnUrl"].ToString();
+
+            bool isAuthenticated = true;
+            if (isAuthenticated && Url.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
+         
+            return Redirect("https://localhost:7182/");
+        }
+
         public IActionResult Index()
         {
             return View();
