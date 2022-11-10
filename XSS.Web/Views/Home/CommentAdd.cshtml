@@ -10,6 +10,7 @@
     <title>CommentAdd</title>
 </head>
 <body>
+    @*<form asp-antiforgery="false" method="post">*@ <!--CSRF false-->
     <form method="post">
         <div class="form-group">
             <input type="text" name="name" class="form-control" placeholder="Name" />

@@ -25,6 +25,8 @@ namespace XSS.Web.Controllers
             return View();
         }
 
+        //[IgnoreAntiforgeryToken] // CSRF kullanımını kaldırır.
+        [ValidateAntiForgeryToken] // Cross-site Request Forgery (CSRF) ' yi önler.
         [HttpPost]
         public IActionResult CommentAdd(string name, string comment)
         {
